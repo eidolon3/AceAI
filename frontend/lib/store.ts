@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+<<<<<<< HEAD
 import { authApi, notesApi } from './api';
 
 interface User {
@@ -37,6 +38,8 @@ export const useAuth = create<AuthState>((set) => ({
     set({ user: null, token: null });
   },
 }));
+=======
+>>>>>>> 68fc71fe460cb801080dbceba32a57732dacea6c
 
 interface Note {
   id: string;
@@ -44,6 +47,7 @@ interface Note {
   content: string;
   source: {
     type: 'youtube' | 'pdf' | 'manual';
+<<<<<<< HEAD
     originalContent?: string;
   };
   createdAt: string;
@@ -84,4 +88,30 @@ export const useNotes = create<NotesState>((set) => ({
       throw error;
     }
   },
+=======
+    originalContent: string;
+  };
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface NotesStore {
+  notes: Note[];
+  loading: boolean;
+  error: string | null;
+  addNote: (note: Note) => void;
+  setNotes: (notes: Note[]) => void;
+  setLoading: (loading: boolean) => void;
+  setError: (error: string | null) => void;
+}
+
+export const useNotes = create<NotesStore>((set) => ({
+  notes: [],
+  loading: false,
+  error: null,
+  addNote: (note) => set((state) => ({ notes: [note, ...state.notes] })),
+  setNotes: (notes) => set({ notes }),
+  setLoading: (loading) => set({ loading }),
+  setError: (error) => set({ error }),
+>>>>>>> 68fc71fe460cb801080dbceba32a57732dacea6c
 })); 
