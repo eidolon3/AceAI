@@ -5,26 +5,39 @@ import { OpenAI } from 'openai';
 const router = express.Router();
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
+// Debug log
+console.log('YouTube router loaded');
+
 router.post('/transcribe', async (req, res) => {
+  console.log('Received transcribe request');
+
   try {
     const { url } = req.body;
 
     if (!url) {
+      console.log('No URL provided');
       return res.status(400).json({ error: 'URL is required' });
     }
 
     // Extract video ID from URL
     const videoId = extractVideoId(url);
     if (!videoId) {
+      console.log('Invalid YouTube URL:', url);
       return res.status(400).json({ error: 'Invalid YouTube URL' });
     }
+
+    console.log('Processing video ID:', videoId);
 
     // Get transcript
     const transcript = await YoutubeTranscript.fetchTranscript(videoId);
     const fullText = transcript.map(part => part.text).join(' ');
 
+    console.log('Transcript length:', fullText.length);
+
     // Generate summary using OpenAI
     const summary = await generateSummary(fullText);
+
+    console.log('Summary generated successfully');
 
     res.json({
       success: true,

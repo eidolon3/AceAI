@@ -1,13 +1,25 @@
 import express from 'express';
-import { YoutubeTranscript } from 'youtube-transcript';
-import { OpenAI } from 'openai';
-import youtubeRouter from './routes/youtube';
 import cors from 'cors';
+import youtubeRouter from './routes/youtube';
 
 const app = express();
 
+// Middleware
 app.use(cors());
+app.use(express.json());
 
+// Debug middleware
+app.use((req, res, next) => {
+  console.log(`${req.method} ${req.path}`);
+  next();
+});
+
+// Test route
+app.get('/test', (req, res) => {
+  res.json({ message: 'Server is running' });
+});
+
+// Routes
 app.use('/api/youtube', youtubeRouter);
 
-// ... rest of the file ... 
+export default app; 

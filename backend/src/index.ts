@@ -6,6 +6,7 @@ import noteRoutes from './notes/routes';
 import flashcardRoutes from './flashcards/routes';
 import quizRoutes from './quizzes/routes';
 import authRoutes from './auth/routes';
+import youtubeRoutes from './youtube/routes';
 
 // Load environment variables FIRST
 dotenv.config();
@@ -37,6 +38,7 @@ app.get('/', (req: Request, res: Response) => {
 });
 
 // Routes
+app.use('/api/youtube', youtubeRoutes);
 app.use('/api/summaries', summaryRoutes);
 app.use('/api/notes', noteRoutes);
 app.use('/api/flashcards', flashcardRoutes);
@@ -51,7 +53,6 @@ app.get('/health', (req: Request, res: Response) => {
 app.listen(port, () => {
   console.log(`⚡️[server]: Server is running at http://localhost:${port}`);
 });
-
 declare namespace Express {
   export interface Request {
     user?: {

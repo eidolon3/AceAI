@@ -35,7 +35,10 @@ export const notesApi = {
       originalContent: string;
     };
   }) {
-    const response = await api.post('/api/notes', data);
+    const response = await api.post('/api/notes', {
+      ...data,
+      userId: 'test-user-id', // Temporary user ID
+    });
     return response.data;
   },
 

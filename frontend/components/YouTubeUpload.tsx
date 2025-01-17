@@ -4,17 +4,18 @@ import { useState } from 'react';
 import { Loader2 } from 'lucide-react';
 import Modal from './Modal';
 import { youtubeApi, notesApi } from '../lib/api';
+import { useNotes } from '../lib/store';
 
 interface YouTubeUploadProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (url: string) => Promise<void>;
 }
 
-export default function YouTubeUpload({ isOpen, onClose, onSubmit }: YouTubeUploadProps) {
+export default function YouTubeUpload({ isOpen, onClose }: YouTubeUploadProps) {
   const [url, setUrl] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { addNote } = useNotes();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -30,7 +31,7 @@ export default function YouTubeUpload({ isOpen, onClose, onSubmit }: YouTubeUplo
       const data = await youtubeApi.getTranscription(url);
       
       // Create a new note with the summary
-      await notesApi.createNote({
+      const response = await notesApi.createNote({
         title: `YouTube Summary - ${new Date().toLocaleDateString()}`,
         content: data.data.summary,
         source: {
@@ -38,6 +39,9 @@ export default function YouTubeUpload({ isOpen, onClose, onSubmit }: YouTubeUplo
           originalContent: url,
         },
       });
+
+      // Add the new note to the store
+      addNote(response.data);
 
       setUrl('');
       onClose();

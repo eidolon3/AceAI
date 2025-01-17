@@ -4,46 +4,30 @@ interface Note {
   id: string;
   title: string;
   content: string;
-  summary?: string;
-  createdAt: Date;
   source: {
     type: 'youtube' | 'pdf' | 'manual';
     originalContent: string;
   };
+  createdAt: string;
+  updatedAt: string;
 }
 
-interface AppState {
+interface NotesStore {
   notes: Note[];
   loading: boolean;
   error: string | null;
-  setNotes: (notes: Note[]) => void;
   addNote: (note: Note) => void;
-  removeNote: (id: string) => void;
+  setNotes: (notes: Note[]) => void;
   setLoading: (loading: boolean) => void;
   setError: (error: string | null) => void;
 }
 
-export const useStore = create<AppState>((set) => ({
+export const useNotes = create<NotesStore>((set) => ({
   notes: [],
   loading: false,
   error: null,
+  addNote: (note) => set((state) => ({ notes: [note, ...state.notes] })),
   setNotes: (notes) => set({ notes }),
-  addNote: (note) => set((state) => ({ notes: [...state.notes, note] })),
-  removeNote: (id) => set((state) => ({ 
-    notes: state.notes.filter((note) => note.id !== id) 
-  })),
   setLoading: (loading) => set({ loading }),
   setError: (error) => set({ error }),
-}));
-
-// Custom hook for notes management
-export function useNotes() {
-  const store = useStore();
-  return {
-    notes: store.notes,
-    loading: store.loading,
-    error: store.error,
-    addNote: store.addNote,
-    removeNote: store.removeNote,
-  };
-} 
+})); 
